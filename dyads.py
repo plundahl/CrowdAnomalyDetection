@@ -150,7 +150,9 @@ for curves in testCurves:
         tmpDiff.append(
             [fabs(x[0]-x[1]) for x in zip(Measurments[i], tmp)]
         )
-    nearest = [x for _,x in sorted(zip(tmpDiff,tmpCurves))][:10]
+    nearest = []
+    for i in range(len(tmp)):
+        nearest.extend([x for _,x in sorted(zip(tmpDiff,tmpCurves), key=lambda item: item[0][i] )][:10])
     depthList = []
     for i in nearest:
         dyad = [fabs(x[0]-x[1]) for x in zip(Measurments[i], tmp)]
