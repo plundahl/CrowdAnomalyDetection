@@ -5,13 +5,13 @@ import random
 import cProfile
 
 class Node(object):
-    def __init__(self, index: int, dyads: list, size):
+    def __init__(self, index: int, dyads: list):
         self.index = index
-        self.size = size
+        self.size = len(dyads)
         self.dyad = dyads
-        self.objSeq = list(range(1,size))
+        self.objSeq = list(range(1,self.size))
         random.shuffle(self.objSeq)
-        self.branch = [None]*size
+        self.branch = [None]*self.size
 
     def getList(self):
         result = [self.index]
@@ -19,6 +19,15 @@ class Node(object):
             if(elem != None):
                 result = result + elem.getList()
         return result
+
+    def get_depth(self, fronts: list):
+        depth = 0
+        for root in fronts:
+            if(check_tree(self, root, True, False)):
+                break
+            depth += 1
+        return depth
+
 
 def tens(population: list):
     population = sorted(population, key=lambda x: x.dyad[0])
@@ -46,18 +55,21 @@ def update_tree(p: Node, tree: Node):
         return True
     return False
 
-def check_tree(p: Node, tree: Node, add_pos: bool):
+def check_tree(p: Node, tree: Node, add_pos: bool, modify_tree = True):
     if(tree==None):
         return True
-    
+    if(not modify_tree):
+        if(p.dyad[0] < tree.dyad[0]):
+            return True
+
     m = find_min_m(p, tree)
     if(m == -1):
         return False
     else:
         for i in range(m+1):
-            if(check_tree(p, tree.branch[i], i==m and add_pos) == False):
+            if(check_tree(p, tree.branch[i], i==m and add_pos, modify_tree) == False):
                 return False
-        if(tree.branch[m] == None and add_pos):
+        if(tree.branch[m] == None and add_pos and modify_tree):
             tree.branch[m] = p
         return True
 
