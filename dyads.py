@@ -3,6 +3,10 @@ from math import cos, sin, radians, sqrt, pow, fabs
 from collections import namedtuple
 import time
 import random
+from tens import tens, Node
+
+random.seed(1)
+
 start_time = time.time()
 
 Point = namedtuple('Point', ['x', 'y', 't'])
@@ -52,7 +56,7 @@ with open("students001.vsp") as f:
         trainingCurves.append(tmpCurve)
 
 random.shuffle(trainingCurves)
-trainingCurves = trainingCurves[:50]
+trainingCurves = trainingCurves[:100]
 
 Dyads = []
 val_length = []
@@ -72,6 +76,7 @@ for curves in trainingCurves:
         val_speed.append(length/(curves[-1].t - curves[0].t))
 
 
+pop = []
 for i in range(0, len(trainingCurves)):
     for j in range(0, len(trainingCurves)):
         if i<=j:
@@ -83,6 +88,7 @@ for i in range(0, len(trainingCurves)):
             i,j
         ]
         Dyads.append(dyad)
+        pop.append(Node(i, dyad, 3))
 
 domN = 0
 def dominates(a,b):
@@ -93,11 +99,17 @@ def dominates(a,b):
 
 S = []
 n = []
-F = [[]]
+F = []
 for p in range(0,len(Dyads)):
     S.append([])
     n.append(0)
 
+
+result = tens(pop)
+for root in result:
+    F.append(root.getList())
+
+"""
 for p in range(0,len(Dyads)-1):
     for q in range(p+1, len(Dyads)):
         if dominates(Dyads[p],Dyads[q]):
@@ -122,6 +134,7 @@ while F[i]:
     i=i+1
     F.append(H)
 
+"""
 """
 print(len(F))
 print(F[-2])

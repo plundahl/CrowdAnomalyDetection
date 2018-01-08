@@ -4,7 +4,7 @@ import time
 import random
 import cProfile
 
-length = 4000
+length = 100
 xs = []
 ys = []
 xs2 = []
@@ -30,8 +30,8 @@ dom_tests = 0
 def dominates(a,b):
     global dom_tests
     dom_tests = dom_tests + 1
-    #return xs[a] <= xs[b] and ys[a] <= ys[b] and (xs[a] < xs[b] or ys[a] < ys[b])
-    return xs[a] <= xs[b] and ys[a] <= ys[b] and xs2[a] <= xs2[b] and ys2[a] <= ys2[b] and (xs[a] < xs[b] or ys[a] < ys[b] or xs2[a] < xs2[b] or ys2[a] < ys2[b])
+    return xs[a] <= xs[b] and ys[a] <= ys[b] and (xs[a] < xs[b] or ys[a] < ys[b])
+    #return xs[a] <= xs[b] and ys[a] <= ys[b] and xs2[a] <= xs2[b] and ys2[a] <= ys2[b] and (xs[a] < xs[b] or ys[a] < ys[b] or xs2[a] < xs2[b] or ys2[a] < ys2[b])
 
 
 for p in range(0,length):
@@ -187,7 +187,7 @@ def treePareto():
 
 #cProfile.run("treePareto()")
 
-treePareto()
+#treePareto()
 i = 0
 for x in F:
     #print({i:sorted(x)})
