@@ -1,8 +1,5 @@
-import matplotlib.pyplot as plt
-from math import cos, sin, radians, floor
-import time
 import random
-import cProfile
+from typing import List
 
 class Node(object):
     def __init__(self, index: int, dyads: list):
@@ -20,7 +17,7 @@ class Node(object):
                 result = result + elem.getList()
         return result
 
-    def get_depth(self, fronts: list):
+    def get_depth(self, fronts: List):
         depth = 0
         for root in fronts:
             if(check_tree(self, root, True, False)):
@@ -29,7 +26,7 @@ class Node(object):
         return depth
 
 
-def tens(population: list):
+def tens(population: list) -> List[Node]:
     population = sorted(population, key=lambda x: x.dyad[0])
     F = []
     k = 0
