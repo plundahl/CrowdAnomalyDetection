@@ -56,14 +56,16 @@ def openCurveFile(name: str) -> Tuple[List[Curves],List[Curves]]:
             trainingCurves.append(Curves(tmpPoints, tmpCurve, -1, i))
         
         obstacles = []
-        curves = int(f.readline().split()[0])
-        for i in range(0,curves):
-            line = f.readline()
-            word = line.split()
-            tmpPoints = []
-            tmpPoints.append( Point(float(word[0]), float(word[1]), 0))
-            tmpPoints.append( Point(float(word[2]), float(word[3]), 0))
-            obstacles.append(Curves(tmpPoints, [], -1, 0))
+        obstacleInfo = f.readline()
+        if "line obstacles" in obstacleInfo:
+            curves = int(obstacleInfo.split()[0])
+            for i in range(0,curves):
+                line = f.readline()
+                word = line.split()
+                tmpPoints = []
+                tmpPoints.append( Point(float(word[0]), float(word[1]), 0))
+                tmpPoints.append( Point(float(word[2]), float(word[3]), 0))
+                obstacles.append(Curves(tmpPoints, [], -1, 0))
  
     return (trainingCurves, obstacles)
 
@@ -134,7 +136,6 @@ def plotResult(outliersTraining: List[Curves], badBehaviour: List[Curves], nonCa
 
     def update(val):
         nr = floor(val)
-        print(nr)
         for p in plots:
             p.plot.cla()
             p.plot.axis([-xmax,xmax,-ymax,ymax])
@@ -173,12 +174,17 @@ def plotResult(outliersTraining: List[Curves], badBehaviour: List[Curves], nonCa
 
 saveFile = namedtuple("saveFile",["i", "j", "k", "l"])
 def main():
+    if len(sys.argv) < 3:
+        print("Usage: python3 dyads.py TRAINING-FILE TEST-FILE")
+        return
+    trainingFile = sys.argv[1]
+    testFile = sys.argv[2]
     start_time=time.time()
-    [trainingCurves, trainingObstacles] = openCurveFile("students003.vsp")
+    [trainingCurves, trainingObstacles] = openCurveFile(trainingFile)
     #[trainingCurves, trainingObstacles] = openCurveFile("uni_examples.vsp")
     print(len(trainingCurves))
     #random.shuffle(trainingCurves)
-    #trainingCurves = trainingCurves[:118]
+    trainingCurves = trainingCurves[:50]
     #for c in trainingCurves:
     #    findNeighbours(c.Improved,trainingCurves)
 
@@ -193,8 +199,8 @@ def main():
 
     print("Training Depth: ", len(trainingTree))
 
-    [testCurves, testObstacles] = openCurveFile("clustering.vsp")
-    #testCurves = testCurves[:118]
+    [testCurves, testObstacles] = openCurveFile(testFile)
+    testCurves = testCurves[:50]
     testMeasurments = []
     for curves in testCurves:
         testMeasurments.append(measure(curves.Improved, curves.Index, testCurves, testObstacles))
@@ -219,8 +225,8 @@ def main():
     print("Nearest --- %s seconds ---" % (time.time() - start_time))
 
     print()
-    print("SCORE: ", sum(x.Depth for x in badBehaviour))
-    print("MISSING: ", sum(x.Depth for x in nonCapturedBehaviour))
+    print("SCORE:   ", sum(x.Depth for x in badBehaviour) /len(testCurves) )
+    print("MISSING: ", sum(x.Depth for x in nonCapturedBehaviour) /len(trainingCurves) )
         
     plotResult(outliersTraining, badBehaviour, nonCapturedBehaviour, outliersTest)
 
