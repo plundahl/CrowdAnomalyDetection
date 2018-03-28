@@ -181,12 +181,7 @@ def main():
     testFile = sys.argv[2]
     start_time=time.time()
     [trainingCurves, trainingObstacles] = openCurveFile(trainingFile)
-    #[trainingCurves, trainingObstacles] = openCurveFile("uni_examples.vsp")
     print(len(trainingCurves))
-    #random.shuffle(trainingCurves)
-    trainingCurves = trainingCurves[:50]
-    #for c in trainingCurves:
-    #    findNeighbours(c.Improved,trainingCurves)
 
     print("OpenCurve --- %s seconds ---" % (time.time() - start_time))
     start_time = time.time()
@@ -200,7 +195,6 @@ def main():
     print("Training Depth: ", len(trainingTree))
 
     [testCurves, testObstacles] = openCurveFile(testFile)
-    testCurves = testCurves[:50]
     testMeasurments = []
     for curves in testCurves:
         testMeasurments.append(measure(curves.Improved, curves.Index, testCurves, testObstacles))
